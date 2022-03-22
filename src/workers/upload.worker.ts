@@ -2,17 +2,25 @@
 import { shared } from './shared';
 const ctx: Worker = self as unknown as Worker;
 
-async function start() {
+type WorkerPayload = FilesPayload;
+
+interface FilesPayload {
+  type: 'files',
+  files: File[]
+}
+
+function files(files: File[]) {
   ctx.postMessage({
-    type: 'tsData',
-    data: shared,
+    type: 'files',
+    data: files.map(file => file.name),
   });
 }
 
-ctx.addEventListener('message', (evt) => {
-  switch (evt.data.type) {
-    case 'start':
-      start();
+ctx.addEventListener('message', ({ data }: MessageEvent<WorkerPayload>) => {
+  console.log(data);
+  switch (data?.type) {
+    case 'files':
+      files(Array.from(data?.files));
       return;
   }
 });
