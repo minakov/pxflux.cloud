@@ -5,8 +5,11 @@ const ctx: Worker = self as unknown as Worker;
 type WorkerPayload = FilesPayload;
 
 interface FilesPayload {
-  type: 'files',
+  type: 'files'
   files: File[]
+  recommendedPartSize: number
+  authorizationToken: string
+  bucketId: string
 }
 
 function files(files: File[]) {
